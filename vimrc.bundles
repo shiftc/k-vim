@@ -17,7 +17,8 @@ filetype off " required! turn off
 " inspired by spf13, 自定义需要的插件集合
 if !exists('g:bundle_groups')
     " let g:bundle_groups=['python', 'javascript', 'markdown', 'html', 'css', 'tmux', 'beta', 'json', 'nginx', 'golang', 'ruby', 'less', 'php', 'coffeescript']
-    let g:bundle_groups=['python', 'javascript', 'markdown', 'html', 'css', 'tmux', 'beta']
+    " let g:bundle_groups=['python', 'javascript', 'markdown', 'html', 'css', 'tmux', 'beta']
+    let g:bundle_groups=['python', 'markdown', 'tmux']
 endif
 
 " ----------------------------------------------------------------------------
@@ -155,10 +156,16 @@ Plug 'kana/vim-textobj-entire'
 " 增加缩进文本对象: i   dai yai cii - 相同缩进属于同一块
 Plug 'kana/vim-textobj-indent'
 
+Plug 'jeaye/color_coded'
+
 if count(g:bundle_groups, 'tmux')
     " tmux
     " For tmux navigator Ctrl-hjkl
     Plug 'christoomey/vim-tmux-navigator'
+    " tmuxline
+    Plug 'edkolev/tmuxline.vim'
+    let g:tmuxline_preset = 'mine'
+    let g:tmuxline_powerline_separators = 0
 endif
 
 if count(g:bundle_groups, 'markdown')
@@ -278,7 +285,7 @@ call plug#end()
 
     let g:syntastic_error_symbol='>>'
     let g:syntastic_warning_symbol='>'
-    let g:syntastic_check_on_open=1
+    let g:syntastic_check_on_open=0
     let g:syntastic_check_on_wq=0
     let g:syntastic_enable_highlighting=1
 
@@ -343,7 +350,7 @@ call plug#end()
 
     " 禁止插件检查java
     " thanks to @marsqing, see https://github.com/wklken/k-vim/issues/164
-    let g:syntastic_mode_map = {'mode': 'active', 'passive_filetypes': ['java'] }
+    let g:syntastic_mode_map = {'mode': 'active', 'passive_filetypes': ['java', 'cpp', 'c'] }
 " }}}
 
 
@@ -382,12 +389,15 @@ call plug#end()
     endif
 
     " 直接触发自动补全 insert模式下
-    " let g:ycm_key_invoke_completion = '<C-Space>'
+    let g:ycm_key_invoke_completion = '<C-Space>'
     " 黑名单,不启用
     let g:ycm_filetype_blacklist = {
         \ 'tagbar' : 1,
         \ 'gitcommit' : 1,
         \}
+    let g:ycm_confirm_extra_conf = 0
+    " no syntax checking
+    let g:ycm_show_diagnostics_ui = 0
 " }}}
 
 
@@ -594,14 +604,15 @@ call plug#end()
     if !exists('g:airline_symbols')
         let g:airline_symbols = {}
     endif
-    let g:airline_left_sep = '▶'
-    let g:airline_left_alt_sep = '❯'
-    let g:airline_right_sep = '◀'
-    let g:airline_right_alt_sep = '❮'
+    let g:airline_left_sep = ''
+    let g:airline_left_alt_sep = ''
+    let g:airline_right_sep = ''
+    let g:airline_right_alt_sep = ''
     let g:airline_symbols.linenr = '¶'
-    let g:airline_symbols.branch = '⎇'
+    let g:airline_symbols.branch = ''
     " 是否打开tabline
     " let g:airline#extensions#tabline#enabled = 1
+    let g:airline_theme = 'powerlineish'
 " }}}
 
 
@@ -690,6 +701,7 @@ call plug#end()
 " tagbar {{{
     nmap <F9> :TagbarToggle<CR>
     let g:tagbar_autofocus = 1
+    let g:tagbar_iconchars = ['▸', '▾']
     " let g:tagbar_autoshowtag = 1
     " let g:tagbar_show_visibility = 1
     " for ruby
@@ -735,6 +747,16 @@ call plug#end()
         \ 'ctagsbin'  : 'gotags',
         \ 'ctagsargs' : '-sort -silent'
     \ }
+" }}}
+
+
+" color_coded {{{
+    let g:color_coded_enabled = 1
+    " Disable color_coded in diff mode
+    if &diff
+      let g:color_coded_enabled = 0
+    endif
+    map <F7> :CCtoggle<CR>
 " }}}
 
 
