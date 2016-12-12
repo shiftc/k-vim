@@ -163,7 +163,7 @@ if count(g:bundle_groups, 'tmux')
     " For tmux navigator Ctrl-hjkl
     Plug 'christoomey/vim-tmux-navigator'
     " tmuxline
-    Plug 'edkolev/tmuxline.vim'
+    Plug 'shiftc/tmuxline.vim'
     let g:tmuxline_preset = 'mine'
     let g:tmuxline_powerline_separators = 0
 endif
