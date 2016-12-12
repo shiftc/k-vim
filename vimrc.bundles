@@ -38,11 +38,6 @@ Plug 'scrooloose/syntastic'
 " Snippets are separated from the engine. Add this if you want them:
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 
-" auto complete
-" 代码自动补全
-" 迄今为止用到的最好的自动VIM自动补全插件
-" 重启 :YcmRestartServer
-Plug 'Valloric/YouCompleteMe'
 " 自动补全单引号，双引号等
 Plug 'Raimondi/delimitMate'
 " 自动补全html/xml标签
@@ -142,7 +137,7 @@ Plug 'tomasr/molokai'
 " nerdtree nerdtreetabs
 Plug 'scrooloose/nerdtree' | Plug 'jistr/vim-nerdtree-tabs'
 " ctrlspace
-Plug 'szw/vim-ctrlspace'
+Plug 'shiftc/vim-ctrlspace'
 " tagbar
 Plug 'majutsushi/tagbar'
 
@@ -156,7 +151,14 @@ Plug 'kana/vim-textobj-entire'
 " 增加缩进文本对象: i   dai yai cii - 相同缩进属于同一块
 Plug 'kana/vim-textobj-indent'
 
-Plug 'jeaye/color_coded'
+if count(g:bundle_groups, 'c')
+    " auto complete
+    " 代码自动补全
+    " 迄今为止用到的最好的自动VIM自动补全插件
+    " 重启 :YcmRestartServer
+    Plug 'Valloric/YouCompleteMe'
+    Plug 'jeaye/color_coded'
+endif
 
 if count(g:bundle_groups, 'tmux')
     " tmux
