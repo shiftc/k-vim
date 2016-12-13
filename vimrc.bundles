@@ -568,6 +568,7 @@ call plug#end()
     " let g:ctrlsf_winsize = '30%'
     let g:ctrlsf_auto_close = 0
     let g:ctrlsf_confirm_save = 0
+    let g:ctrlsf_ackprg = 'ag'
     " Note: cannot use <CR> or <C-m> for open
     " Use : <sapce> or <tab>
     let g:ctrlsf_mapping = {
