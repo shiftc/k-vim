@@ -30,6 +30,9 @@ call plug#begin('~/.vim/bundle')
 
 " 移动光标到插件名上, 使用'#'快速跳转到每个插件的配置处
 
+" autoload_cscope
+Plug 'shiftc/autoload_cscope'
+
 " syntastic
 Plug 'scrooloose/syntastic'
 
@@ -280,6 +283,13 @@ call plug#end()
 
 
 " ################### 基础 ######################
+
+
+" autoload_cscope {{{
+    " use our own cscope map
+    let g:autocscope_menus=0
+" }}}
+
 
 " syntastic {{{
     " dependence
@@ -615,6 +625,7 @@ call plug#end()
     " 是否打开tabline
     " let g:airline#extensions#tabline#enabled = 1
     let g:airline_theme = 'powerlineish'
+    " let g:airline_theme = 'lucius'
 " }}}
 
 
