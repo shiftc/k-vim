@@ -133,7 +133,7 @@ Plug 'kien/rainbow_parentheses.vim'
 Plug 'altercation/vim-colors-solarized'
 " molokai
 " 主题 molokai
-Plug 'tomasr/molokai'
+Plug 'shiftc/molokai'
 
 
 " nav
