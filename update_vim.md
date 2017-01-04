@@ -67,17 +67,16 @@ you can refer to below links
                 --with-compiledby='WenteWang <winter.seu@gmail.com>' \
                 --enable-gui=gtk2 --enable-cscope --prefix=/usr
     make VIMRUNTIMEDIR=/usr/share/vim/vim80
+    cp /usr/bin/vim /usr/bin/vim.old
     make install
 ```
 
 ### 3. use update-alternatives to select built vim
 
 ```
-    mv /usr/bin/vim /usr/bin/vim80
-```
-```
 # this changes every alternative seen in "update-alternatives --get-selections" with a specific target to a new target.
 # before pasting: change OLD_TARGET and NEW_TARGET and NEW_PRIO to match your needs
-    (OLD_TARGET="/usr/bin/vim.basic"; NEW_TARGET="/usr/bin/vim80"; NEW_PRIO=50; echo "*** BEFORE ***"; update-alternatives --get-selections; echo "*********"; IFS=$'\n'; for ALTERNATIVE in `update-alternatives --get-selections | grep ${OLD_TARGET} | awk '{print $1}'`; do update-alternatives --verbose --install `which ${ALTERNATIVE}` ${ALTERNATIVE} ${NEW_TARGET} ${NEW_PRIO}; update-alternatives --set ${ALTERNATIVE} ${NEW_TARGET}; done; echo "*** AFTER ***"; update-alternatives --get-selections)
-    (OLD_TARGET="/usr/bin/vim.static"; NEW_TARGET="/usr/bin/vim.basic"; echo "*** BEFORE ***"; echo "*********"; IFS=$'\n'; for ALTERNATIVE in `update-alternatives --get-selections | grep ${NEW_TARGET} | awk '{print $1}'`; do echo ${ALTERNATIVE}; update-alternatives --verbose --remove ${ALTERNATIVE} ${OLD_TARGET} ; done; echo "*** AFTER ***")
+    (OLD_TARGET="/usr/bin/vim.old"; NEW_TARGET="/usr/bin/vim80"; NEW_PRIO=50; echo "*** BEFORE ***"; update-alternatives --get-selections; echo "*********"; IFS=$'\n'; for ALTERNATIVE in `update-alternatives --get-selections | grep ${OLD_TARGET} | awk '{print $1}'`; do update-alternatives --verbose --install `which ${ALTERNATIVE}` ${ALTERNATIVE} ${NEW_TARGET} ${NEW_PRIO}; update-alternatives --set ${ALTERNATIVE} ${NEW_TARGET}; done; echo "*** AFTER ***"; update-alternatives --get-selections)
+# below commands is for remove the alternatives
+    (OLD_TARGET="/usr/bin/vim"; echo "*** BEFORE ***"; echo "*********"; IFS=$'\n'; for ALTERNATIVE in `update-alternatives --get-selections | grep ${NEW_TARGET} | awk '{print $1}'`; do echo ${ALTERNATIVE}; update-alternatives --verbose --remove ${ALTERNATIVE} ${OLD_TARGET} ; done; echo "*** AFTER ***")
 ```
