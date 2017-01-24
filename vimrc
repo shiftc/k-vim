@@ -214,7 +214,7 @@ set softtabstop=4
 " insert tabs on the start of a line according to shiftwidth, not tabstop 按退格键时可以一次删掉 4 个空格
 set smarttab
 " 将Tab自动转化成空格[需要输入真正的Tab键时，使用 Ctrl+V + Tab]
-" set expandtab
+set expandtab
 " 缩进时，取整 use multiple of shiftwidth when indenting with '<' and '>'
 set shiftround
 
@@ -641,14 +641,14 @@ endif
 nmap <C-]> :cs find c <C-R>=expand("<cword>")<CR><CR>
 " nmap <C-\> :cs find 0 <C-R>=expand("<cword>")<CR><CR>
 
-nmap <leader><s :scs find s <C-R>=expand("<cword>")<CR><CR>
-nmap <leader><g :scs find g <C-R>=expand("<cword>")<CR><CR>
-nmap <leader><c :scs find c <C-R>=expand("<cword>")<CR><CR>
-nmap <leader><t :scs find t <C-R>=expand("<cword>")<CR><CR>
-nmap <leader><e :scs find e <C-R>=expand("<cword>")<CR><CR>
-nmap <leader><f :scs find f <C-R>=expand("<cfile>")<CR><CR>
-nmap <leader><i :scs find i <C-R>=expand("<cfile>")<CR><CR>
-nmap <leader><d :scs find d <C-R>=expand("<cword>")<CR><CR>
+nmap <leader><s :cs find s <C-R>=expand("<cword>")<CR><CR>
+nmap <leader><g :cs find g <C-R>=expand("<cword>")<CR><CR>
+nmap <leader><c :cs find c <C-R>=expand("<cword>")<CR><CR>
+nmap <leader><t :cs find t <C-R>=expand("<cword>")<CR><CR>
+nmap <leader><e :cs find e <C-R>=expand("<cword>")<CR><CR>
+nmap <leader><f :cs find f <C-R>=expand("<cfile>")<CR><CR>
+nmap <leader><i :cs find i <C-R>=expand("<cfile>")<CR><CR>
+nmap <leader><d :cs find d <C-R>=expand("<cword>")<CR><CR>
 
 "==========================================
 " TEMP 设置, 尚未确定要不要

@@ -18,7 +18,7 @@ filetype off " required! turn off
 if !exists('g:bundle_groups')
     " let g:bundle_groups=['python', 'javascript', 'markdown', 'html', 'css', 'tmux', 'beta', 'json', 'nginx', 'golang', 'ruby', 'less', 'php', 'coffeescript']
     " let g:bundle_groups=['python', 'javascript', 'markdown', 'html', 'css', 'tmux', 'beta']
-    let g:bundle_groups=['python', 'markdown', 'tmux']
+    let g:bundle_groups=['python', 'markdown', 'tmux', 'c']
 endif
 
 " ----------------------------------------------------------------------------
@@ -161,6 +161,7 @@ if count(g:bundle_groups, 'c')
     " 重启 :YcmRestartServer
     Plug 'Valloric/YouCompleteMe'
     Plug 'jeaye/color_coded'
+    Plug 'Chiel92/vim-autoformat'
 endif
 
 if count(g:bundle_groups, 'tmux')
@@ -773,6 +774,29 @@ call plug#end()
     map <F7> :CCtoggle<CR>
 " }}}
 
+" vim-autoformat {{{
+"clang-format for formating cpp code
+    noremap <F8> :Autoformat<CR>
+    " let g:formatdef_clangformat = '"clang-format  -style=google "'
+
+    nnoremap <leader>cf :call FormatCode("Chromium")<cr>
+    nnoremap <leader>lf :call FormatCode("LLVM")<cr>
+    vnoremap <leader>cf :call FormatCode("Chromium")<CR>
+    vnoremap <leader>lf :call FormatCode("LLVM")<cr>
+    let g:autoformat_verbosemode = 1
+    func FormatCode(style)
+      let firstline=line(".")
+      let lastline=line(".")
+      " Visual mode
+      if exists(a:firstline)
+        firstline = a:firstline
+        lastline = a:lastline
+      endif
+      let g:formatdef_clangformat = "'clang-format --lines='.a:firstline.':'.a:lastline.' --assume-filename='.bufname('%').' -style=" . a:style . "'"
+      let formatcommand = ":" . firstline . "," . lastline . "Autoformat"
+      exec formatcommand
+    endfunc
+" }}}
 
 " ################### 语言相关 ###################
 
