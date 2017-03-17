@@ -386,7 +386,7 @@ call plug#end()
     "let g:ycm_seed_identifiers_with_syntax=1   "语言关键字补全, 不过python关键字都很短，所以，需要的自己打开
 
     " 跳转到定义处, 分屏打开
-    let g:ycm_goto_buffer_command = 'horizontal-split'
+    let g:ycm_goto_buffer_command = 'same-buffer'
     " nnoremap <leader>jd :YcmCompleter GoToDefinition<CR>
     nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
     nnoremap <leader>gd :YcmCompleter GoToDeclaration<CR>
@@ -450,6 +450,7 @@ call plug#end()
     " for python docstring ",优化输入
     au FileType python let b:delimitMate_nesting_quotes = ['"']
     au FileType php let delimitMate_matchpairs = "(:),[:],{:}"
+    imap <c-l> <Plug>delimitMateS-Tab
     " 关闭某些类型文件的自动补全
     "au FileType mail let b:delimitMate_autoclose = 0
 " }}}
