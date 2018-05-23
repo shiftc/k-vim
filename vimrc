@@ -140,7 +140,8 @@ set ruler
 " 在状态栏显示正在输入的命令
 set showcmd
 " 左下角显示当前vim模式
-set showmode
+" set showmode
+set noshowmode
 
 " 在上下移动光标时，光标的上方或下方至少会保留显示的行数
 set scrolloff=7
@@ -220,7 +221,6 @@ set shiftround
 
 " A buffer becomes hidden when it is abandoned
 set hidden
-set wildmode=list:longest
 set ttyfast
 
 " 00x增减数字时使用十进制
@@ -287,6 +287,8 @@ set completeopt=longest,menu
 
 " 增强模式中的命令行自动完成操作
 set wildmenu
+" set wildmode=list:full
+set wildmode=list:longest
 " Ignore compiled files
 set wildignore=*.o,*~,*.pyc,*.class
 
@@ -556,6 +558,7 @@ nnoremap U <C-r>
 
 " Quickly edit/reload the vimrc file
 nmap <silent> <leader>ev :e $MYVIMRC<CR>
+nmap <silent> <leader>evb :e ~/.vimrc.bundles<CR>
 nmap <silent> <leader>sv :so $MYVIMRC<CR>
 
 "==========================================

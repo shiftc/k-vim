@@ -34,12 +34,17 @@ call plug#begin('~/.vim/bundle')
 Plug 'shiftc/autoload_cscope'
 
 " syntastic
-Plug 'scrooloose/syntastic'
+if v:version < 800
+    Plug 'scrooloose/syntastic'
+else
+    Plug 'scrooloose/syntastic'
+    " Plug 'w0rp/ale'
+endif
 
 " Group dependencies, vim-snippets depends on ultisnips
 " 代码片段快速插入 (snippets中,是代码片段资源,需要学习)
 " Snippets are separated from the engine. Add this if you want them:
-Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+" Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 
 " 自动补全单引号，双引号等
 Plug 'Raimondi/delimitMate'
@@ -87,11 +92,14 @@ Plug 'terryma/vim-expand-region'
 " multiplecursors
 Plug 'terryma/vim-multiple-cursors'
 
+" relpace ctrlp ctrlp-funky
+Plug 'Yggdroot/LeaderF'
+
 " quick locate file or function
 " 文件搜索
 " change to https://github.com/ctrlpvim/ctrlp.vim
 " ctrlp ctrlpfunky
-Plug 'ctrlpvim/ctrlp.vim' | Plug 'tacahiroy/ctrlp-funky'
+" Plug 'ctrlpvim/ctrlp.vim' | Plug 'tacahiroy/ctrlp-funky'
 " ctrlsf
 " 类似sublimetext的搜索
 " In CtrlSF window:
@@ -140,7 +148,7 @@ Plug 'shiftc/molokai'
 " nerdtree nerdtreetabs
 Plug 'scrooloose/nerdtree' | Plug 'jistr/vim-nerdtree-tabs'
 " ctrlspace
-Plug 'shiftc/vim-ctrlspace'
+Plug 'vim-ctrlspace/vim-ctrlspace'
 " tagbar
 Plug 'majutsushi/tagbar'
 
@@ -153,7 +161,12 @@ Plug 'kana/vim-textobj-line'
 Plug 'kana/vim-textobj-entire'
 " 增加缩进文本对象: i   dai yai cii - 相同缩进属于同一块
 Plug 'kana/vim-textobj-indent'
+" 增加函数文本对象: f   daf yaf cif
+Plug 'kana/vim-textobj-function', { 'for':['c', 'cpp', 'vim', 'java'] }
+" 增加参数文本对象: ,   da, ya, ci,
+Plug 'sgur/vim-textobj-parameter'
 
+Plug 'Shougo/echodoc.vim'
 if count(g:bundle_groups, 'c')
     " auto complete
     " 代码自动补全
@@ -162,6 +175,7 @@ if count(g:bundle_groups, 'c')
     Plug 'Valloric/YouCompleteMe'
     Plug 'jeaye/color_coded'
     Plug 'Chiel92/vim-autoformat'
+    " Plug 'rhysd/vim-clang-format'
 endif
 
 if count(g:bundle_groups, 'tmux')
@@ -293,6 +307,7 @@ call plug#end()
 
 
 " syntastic {{{
+if has_key(g:plugs, 'syntastic')
     " dependence
     " 1. shellcheck `brew install shellcheck` https://github.com/koalaman/shellcheck
 
@@ -364,8 +379,62 @@ call plug#end()
     " 禁止插件检查java
     " thanks to @marsqing, see https://github.com/wklken/k-vim/issues/164
     let g:syntastic_mode_map = {'mode': 'active', 'passive_filetypes': ['java', 'cpp', 'c'] }
+endif
 " }}}
 
+" ale {{{
+if has_key(g:plugs, 'ale')
+    " pip install flake8
+    " npm install -g eslint eslint-plugin-standard eslint-plugin-promise eslint-config-standard
+    " npm install -g eslint-plugin-import eslint-plugin-node eslint-plugin-html babel-eslint
+    let g:ale_linters = {
+    \   'python': ['flake8'],
+    \   'javascript': ['eslint'],
+    \}
+
+    " E501 -> 120 chars
+    let g:ale_python_flake8_args="--ignore=E114,E116,E131 --max-line-length=120"
+    " --ignore=E225,E124,E712,E116
+
+    let g:ale_lint_on_text_changed = 'normal'
+    let g:ale_lint_on_insert_leave = 1
+    let g:airline#extensions#ale#enabled = 1
+
+    let g:ale_c_gcc_options = '-Wall -O2 -std=c99'
+    let g:ale_cpp_gcc_options = '-Wall -O2 -std=c++14'
+    let g:ale_c_cppcheck_options = ''
+    let g:ale_cpp_cppcheck_options = ''
+
+    let g:ale_sign_error = '>>'
+    let g:ale_sign_warning = '>'
+
+    let g:ale_statusline_format = ['X %d', '! %d', 'o ok']
+    let g:ale_echo_msg_error_str = 'E'
+    let g:ale_echo_msg_warning_str = 'W'
+    let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+
+    nmap <silent> <Leader>ep <Plug>(ale_previous_wrap)
+    nmap <silent> <Leader>en <Plug>(ale_next_wrap)
+
+    nnoremap <silent> <Leader>ec :ALEToggle<CR>
+
+    " troggle quickfix list
+    function! ToggleErrors()
+        let old_last_winnr = winnr('$')
+        lclose
+        if old_last_winnr == winnr('$')
+            " Nothing was closed, open syntastic_error location panel
+            lopen
+        endif
+    endfunction
+    nnoremap <Leader>s :call ToggleErrors()<cr>
+
+    let g:ale_set_highlights = 1
+    highlight clear ALEErrorSign
+    highlight clear ALEWarningSign
+endif
+
+" }}}
 
 " ################### 自动补全 ###################
 
@@ -375,9 +444,10 @@ call plug#end()
     let g:ycm_key_list_select_completion = ['<Down>']
     "let g:ycm_key_list_previous_completion=['<c-p>']
     let g:ycm_key_list_previous_completion = ['<Up>']
+    let g:ycm_key_list_stop_completion = ['<C-y>', '<Enter>']
     let g:ycm_complete_in_comments = 1  "在注释输入中也能补全
     let g:ycm_complete_in_strings = 1   "在字符串输入中也能补全
-    let g:ycm_use_ultisnips_completer = 1 "提示UltiSnips
+    " let g:ycm_use_ultisnips_completer = 1 "提示UltiSnips
     let g:ycm_collect_identifiers_from_comments_and_strings = 1   "注释和字符串中的文字也会被收入补全
     let g:ycm_collect_identifiers_from_tags_files = 1
     " 开启语法关键字补全
@@ -413,6 +483,9 @@ call plug#end()
     let g:ycm_show_diagnostics_ui = 0
 " }}}
 
+" echodoc.vim {{{
+    let g:echodoc_enable_at_startup = 1
+" }}}
 
 " ultisnips {{{
     let g:UltiSnipsExpandTrigger       = "<tab>"
@@ -531,20 +604,37 @@ call plug#end()
 
 " ################### 功能相关 ###################
 
+" LeaderF {{{
+    let g:Lf_ShortcutF = '<leader>ff'
+    let g:Lf_ShortcutB = '<leader>fb'
+    noremap <leader>fm :LeaderfMru<CR>
+    noremap <leader>fu :LeaderfFunction<CR>
+    noremap <leader>ft :LeaderfTag<CR>
+    let g:Lf_StlColorscheme = 'powerline'
+    let g:Lf_StlSeparator = { 'left': '', 'right': '', 'font': '' }
+
+    let g:Lf_RootMarkers = ['.project', '.root', '.svn', '.git']
+    let g:Lf_WorkingDirectoryMode = 'Ac'
+    let g:Lf_WindowHeight = 0.30
+    let g:Lf_CacheDirectory = expand('~/.vim/cache')
+    let g:Lf_ShowRelativePath = 0
+" }}}
+
+
 " ctrlp ctrlpfunky{{{
-    let g:ctrlp_map = '<leader>p'
-    let g:ctrlp_cmd = 'CtrlP'
-    map <leader>f :CtrlPMRU<CR>
-    let g:ctrlp_custom_ignore = {
-        \ 'dir':  '\v[\/]\.(git|hg|svn|rvm)$',
-        \ 'file': '\v\.(exe|so|dll|zip|tar|tar.gz|pyc)$',
-        \ }
-    let g:ctrlp_working_path_mode=0
-    let g:ctrlp_match_window_bottom=1
-    let g:ctrlp_max_height=15
-    let g:ctrlp_match_window_reversed=0
-    let g:ctrlp_mruf_max=500
-    let g:ctrlp_follow_symlinks=1
+    " let g:ctrlp_map = '<leader>p'
+    " let g:ctrlp_cmd = 'CtrlP'
+    " map <leader>f :CtrlPMRU<CR>
+    " let g:ctrlp_custom_ignore = {
+        " \ 'dir':  '\v[\/]\.(git|hg|svn|rvm)$',
+        " \ 'file': '\v\.(exe|so|dll|zip|tar|tar.gz|pyc)$',
+        " \ }
+    " let g:ctrlp_working_path_mode=0
+    " let g:ctrlp_match_window_bottom=1
+    " let g:ctrlp_max_height=15
+    " let g:ctrlp_match_window_reversed=0
+    " let g:ctrlp_mruf_max=500
+    " let g:ctrlp_follow_symlinks=1
     " 如果安装了ag, 使用ag
     " if executable('ag')
     " " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
@@ -555,12 +645,12 @@ call plug#end()
 
     " ctrlpfunky
     " ctrlp插件1 - 不用ctag进行函数快速跳转
-    nnoremap <Leader>fu :CtrlPFunky<Cr>
+    " nnoremap <Leader>fu :CtrlPFunky<Cr>
     " narrow the list down with a word under cursor
-    nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
-    let g:ctrlp_funky_syntax_highlight = 1
+    " nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
+    " let g:ctrlp_funky_syntax_highlight = 1
 
-    let g:ctrlp_extensions = ['funky']
+    " let g:ctrlp_extensions = ['funky']
 " }}}
 
 
@@ -662,7 +752,6 @@ call plug#end()
     au Syntax * RainbowParenthesesLoadBraces
 " }}}
 
-
 " ################### 显示增强-主题 ###################"
 
 " solarized {{{
@@ -676,6 +765,10 @@ call plug#end()
     " monokai原始背景色
     let g:molokai_original = 1
     let g:rehash256 = 1
+" }}}
+
+" vim-mark{{{
+    " nmap <Leader>nn <Plug>MarkClear
 " }}}
 
 " ################### 快速导航 ###################
@@ -705,7 +798,11 @@ call plug#end()
 
 " Vim Workspace Controller
 " ctrlspace {{{
+    " let g:CtrlSpaceLoadLastWorkspaceOnStart = 1
+    " let g:CtrlSpaceSaveWorkspaceOnSwitch = 1
+    " let g:CtrlSpaceSaveWorkspaceOnExit = 1
     let g:airline_exclude_preview = 1
+    let g:CtrlSpaceUseUnicode = 0
     hi CtrlSpaceSelected guifg=#586e75 guibg=#eee8d5 guisp=#839496 gui=reverse,bold ctermfg=10 ctermbg=7 cterm=reverse,bold
     hi CtrlSpaceNormal   guifg=#839496 guibg=#021B25 guisp=#839496 gui=NONE ctermfg=12 ctermbg=0 cterm=NONE
     hi CtrlSpaceSearch   guifg=#cb4b16 guibg=NONE gui=bold ctermfg=9 ctermbg=NONE term=bold cterm=bold
@@ -784,7 +881,7 @@ call plug#end()
     nnoremap <leader>lf :call FormatCode("LLVM")<cr>
     vnoremap <leader>cf :call FormatCode("Chromium")<CR>
     vnoremap <leader>lf :call FormatCode("LLVM")<cr>
-    let g:autoformat_verbosemode = 1
+    let g:autoformat_verbosemode = 0
     func FormatCode(style)
       let firstline=line(".")
       let lastline=line(".")
@@ -799,6 +896,8 @@ call plug#end()
     endfunc
 " }}}
 
+" vim-autoformat {{{
+" }}}
 " ################### 语言相关 ###################
 
 " quickrun {{{
@@ -809,7 +908,7 @@ call plug#end()
     \}
 
     let g:quickrun_no_default_key_mappings = 1
-    nmap <Leader>r <Plug>(quickrun)
+    nmap <Leader>rr <Plug>(quickrun)
     map <F10> :QuickRun<CR>
 " }}}
 
