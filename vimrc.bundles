@@ -34,12 +34,12 @@ call plug#begin('~/.vim/bundle')
 Plug 'shiftc/autoload_cscope'
 
 " syntastic
-if v:version < 800
-    Plug 'scrooloose/syntastic'
-else
-    Plug 'scrooloose/syntastic'
-    " Plug 'w0rp/ale'
-endif
+" if v:version < 800
+    " Plug 'scrooloose/syntastic'
+" else
+    " Plug 'scrooloose/syntastic'
+    " " Plug 'w0rp/ale'
+" endif
 
 " Group dependencies, vim-snippets depends on ultisnips
 " 代码片段快速插入 (snippets中,是代码片段资源,需要学习)
@@ -167,15 +167,18 @@ Plug 'kana/vim-textobj-function', { 'for':['c', 'cpp', 'vim', 'java'] }
 Plug 'sgur/vim-textobj-parameter'
 
 Plug 'Shougo/echodoc.vim'
+
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 if count(g:bundle_groups, 'c')
     " auto complete
     " 代码自动补全
     " 迄今为止用到的最好的自动VIM自动补全插件
     " 重启 :YcmRestartServer
-    Plug 'Valloric/YouCompleteMe'
-    Plug 'jeaye/color_coded'
+    " Plug 'Valloric/YouCompleteMe'
+    " Plug 'jeaye/color_coded'
     Plug 'Chiel92/vim-autoformat'
     " Plug 'rhysd/vim-clang-format'
+    Plug 'jackguo380/vim-lsp-cxx-highlight'
 endif
 
 if count(g:bundle_groups, 'tmux')
@@ -437,8 +440,24 @@ endif
 " }}}
 
 " ################### 自动补全 ###################
+if has_key(g:plugs, 'coc.nvim')
+" neoclide/coc.nvim {{{
+    " GoTo code navigation.
+    " nmap <silent> gd <Plug>(coc-definition)
+    " nmap <silent> gy <Plug>(coc-type-definition)
+    " nmap <silent> gi <Plug>(coc-implementation)
+    " nmap <silent> gr <Plug>(coc-references)
+    nmap <silent> <leader>gd <Plug>(coc-references)
+    nmap <silent> <leader>jd <Plug>(coc-definition)
+" }}}
+endif
 
+if has_key(g:plugs, 'YouCompleteMe')
 " YouCompleteMe {{{
+    " Let clangd fully control code completion
+    " let g:ycm_clangd_uses_ycmd_caching = 0
+    " Use installed clangd, not YCM-bundled clangd which doesn't get updates.
+    " let g:ycm_clangd_binary_path = '/usr/bin/clangd'
     "youcompleteme  默认tab  s-tab 和自动补全冲突
     "let g:ycm_key_list_select_completion=['<c-n>']
     let g:ycm_key_list_select_completion = ['<Down>']
@@ -482,6 +501,7 @@ endif
     " no syntax checking
     let g:ycm_show_diagnostics_ui = 0
 " }}}
+endif
 
 " echodoc.vim {{{
     let g:echodoc_enable_at_startup = 1
@@ -618,6 +638,7 @@ endif
     let g:Lf_WindowHeight = 0.30
     let g:Lf_CacheDirectory = expand('~/.vim/cache')
     let g:Lf_ShowRelativePath = 0
+    let g:Lf_ShowDevIcons = 0
 " }}}
 
 
@@ -717,8 +738,8 @@ endif
     let g:airline_symbols.branch = ''
     " 是否打开tabline
     " let g:airline#extensions#tabline#enabled = 1
-    let g:airline_theme = 'powerlineish'
-    " let g:airline_theme = 'lucius'
+    " let g:airline_theme = 'powerlineish'
+    let g:airline_theme = 'lucius'
 " }}}
 
 
